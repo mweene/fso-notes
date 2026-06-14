@@ -3,10 +3,6 @@ import db from '../db/db.js'
 
 let notes = db
 
-const home = (req:Request, res:Response) => {
-  res.status(200).send('homepage | notes')
-}
-
 const getAllNotes = (req:Request, res:Response) => {
   res.status(200).json({data: notes})
 }
@@ -95,7 +91,6 @@ const deleteNote = (req:Request, res:Response) => {
 }
 
 export {
-  home,
   getAllNotes,
   getNoteByID,
   createNote,

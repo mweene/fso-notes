@@ -1,6 +1,6 @@
+
 import { Router } from 'express'
 import { 
-  home, 
   getAllNotes,
   getNoteByID,
   createNote,
@@ -10,7 +10,6 @@ import {
 
 const router:Router = Router()
 
-router.get('/', home)
 router.get('/api/notes', getAllNotes)
 router.get('/api/notes/:id', getNoteByID)
 
