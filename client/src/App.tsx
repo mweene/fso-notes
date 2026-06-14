@@ -1,18 +1,19 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import './App.css'
+import type { Note, NoteProps } from './types'
 
 const getAllNotes = async () => {
   const res = await axios.get('http://localhost:4000/api/notes')
   return res.data.data
 }
 
-const addNewNote = async (payload) => {
-  const res = await axios.post('http://localhost:4000/api/notes', {content: payload})
+const addNewNote = async (content:string) => {
+  const res = await axios.post('http://localhost:4000/api/notes', {content})
   console.log(res.data)
 }
 
-const NotesList = ({notesArray}) => {
+const NotesList = ({notesArray}: NoteProps) => {
   return (
     <ul>
       {notesArray.map(n => (
@@ -28,15 +29,15 @@ const NotesList = ({notesArray}) => {
 }
 
 export default function App() {
-  const [note, setNote] = useState('')
-  const [notes, setNotes] = useState(null)
+  const [note, setNote] = useState<string>('')
+  const [notes, setNotes] = useState<Note[] | null>(null)
 
   useEffect(() => {
     getAllNotes()
       .then(data => setNotes((data)))
-  },[])
+  },[notes])
 
-  const handleSubmit = event => {
+  const handleSubmit = (event:React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault()
     if(!note || note.trim() === '') {
       console.error('invalid note')
@@ -44,12 +45,14 @@ export default function App() {
     } else {
       addNewNote(note)
       setNote('')
+
+      getAllNotes()
+        .then(data => setNotes(data))
     }
   }
 
-  const handleChange = event => {
+  const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
     setNote(event.target.value)
-    console.log(note)
   }
 
   return (

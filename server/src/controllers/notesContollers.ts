@@ -29,15 +29,16 @@ const getNoteByID = (req:Request, res:Response) => {
 const createNote = (req:Request, res:Response) => {
   try {
     const id = notes.length + 1
-    const {content, important} = req.body
+    const {content} = req.body
 
     if(!content)
       return res.status(500).json({error: 'content cannot be empty'})
-    notes.push({id, content, important: important || false})
+    notes.push({id, content, important: false})
 
     res.status(201).json({data: 'new note created successfully'})
   } catch(err:unknown) {
-    res.status(500).json({error: err})
+    console.error(err)
+    res.status(500).json({error: 'a server error has occured try again later'})
   }
 }
 
