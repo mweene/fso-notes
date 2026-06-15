@@ -35,7 +35,7 @@ export default function App() {
   useEffect(() => {
     getAllNotes()
       .then(data => setNotes((data)))
-  },[notes])
+  },[])
 
   const handleSubmit = (event:React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -55,11 +55,19 @@ export default function App() {
     setNote(event.target.value)
   }
 
+  const importantNotes = () => {
+    //const newNotes = notes.filter(n => n.important)
+    //setNotes(newNotes)
+    console.log('newNotes')
+  }
+
   return (
     <section className='App'>
       <h1>Notes</h1>
 
-      <button>show important</button>
+      <button onClick={importantNotes}>
+        show important
+      </button>
 
       {
         notes 
