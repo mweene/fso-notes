@@ -11,14 +11,10 @@ const getAllNotes = (req:Request, res:Response) => {
 }
 
 const getNoteByID = (req:Request, res:Response) => {
-  try {
-    const id = Number(req.params.id)
-    const note = notes.find(n => n.id === id)
-
-    if(!note) 
-      return res.status(400).json({error: 'no note found with that id'})
-
-    res.status(200).json({data: note})
+  try {   
+    Note.findById(req.params.id).then(note => {
+      res.json(note)
+    })
   } catch(err: unknown) {
     res.status(500).json({error: err})
   }
@@ -27,14 +23,20 @@ const getNoteByID = (req:Request, res:Response) => {
 //create new note
 const createNote = (req:Request, res:Response) => {
   try {
-    const id = notes.length + 1
-    const {content} = req.body
+    const { content, important } = req.body
 
     if(!content)
-      return res.status(500).json({error: 'content cannot be empty'})
-    notes.push({id, content, important: false})
+      return res.status(500).json({error: 'content missing'})
 
-    res.status(201).json({data: 'new note created successfully'})
+    const note = new Note({
+      content,
+      important: important || false
+    })
+
+    note.save().then(savedNote => {
+      res.json({data: savedNote})
+    })
+
   } catch(err:unknown) {
     console.error(err)
     res.status(500).json({error: 'a server error has occured try again later'})
