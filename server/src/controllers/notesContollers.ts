@@ -1,10 +1,43 @@
 import type { Request, Response } from 'express'
+import mongoose from 'mongoose'
 import db from '../db/db.js'
 
 let notes = db
 
+
+
+if (process.argv.length < 3) {
+  console.log('give password as argument')
+  process.exit(1)
+}
+
+const password = process.argv[2]
+const url = `mongodb+srv://mweene:${password}@cluster0.1sirzvr.mongodb.net/noteApp?appName=Cluster0`
+
+mongoose.set('strictQuery',false)
+mongoose.connect(url, { family: 4 })
+
+const noteSchema = new mongoose.Schema({
+  content: String,
+  important: Boolean,
+})
+
+noteSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject._id
+    delete returnedObject.__v
+  }
+})
+
+const Note = mongoose.model('Note', noteSchema)
+
+
+
 const getAllNotes = (req:Request, res:Response) => {
-  res.status(200).json({data: notes})
+  Note.find({}).then(notes => 
+    res.status(200).json({data: notes})
+  )
 }
 
 const getNoteByID = (req:Request, res:Response) => {
