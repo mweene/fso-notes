@@ -1,13 +1,14 @@
 import mongoose from 'mongoose'
+import { configDotenv } from 'dotenv'
+
+configDotenv()
 
 mongoose.set('strictQuery', false)
-
 
 const url = process.env.MONGODB_URI
 
 console.log('connecting to', url)
 mongoose.connect(url, { family: 4 })
-
   .then(result => {
     console.log('connected to MongoDB')
   })
@@ -29,4 +30,4 @@ noteSchema.set('toJSON', {
 })
 
 
-module.exports = mongoose.model('Note', noteSchema)
+export default mongoose.model('Note', noteSchema)
