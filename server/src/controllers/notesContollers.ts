@@ -1,4 +1,4 @@
-import type { Request, Response } from 'express'
+import type { NextFunction, Request, Response } from 'express'
 import db from '../db/db.js'
 import Note from '../models/notes.js'
 
@@ -10,14 +10,16 @@ const getAllNotes = (req:Request, res:Response) => {
   )
 }
 
-const getNoteByID = (req:Request, res:Response) => {
+const getNoteByID = (req:Request, res:Response, next:NextFunction) => {
   try {   
     Note.findById(req.params.id).then(note => {
-      res.json(note)
+      if (note) {
+        res.json(note)
+      } else {
+        res.status(404).end()
+      }
     })
-  } catch(err: unknown) {
-    res.status(500).json({error: err})
-  }
+  } catch((err) => next(err)) 
 }
 
 //create new note

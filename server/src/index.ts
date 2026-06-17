@@ -3,15 +3,17 @@ import type { Request, Response } from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import router from './routes/noteRoutes.js'
+import { errorHandler } from './middleware/errorHandler.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const clientDistPath = path.resolve(__dirname, '..', '..', 'client', 'dist')
 
-const port = process.env.PORT || 4000
+const port = process.env.PORT
 const app = express()
 
+app.use(errorHandler)
 app.use(json())
 app.use(urlencoded({extended: true}))
 app.use(express.static(clientDistPath))
