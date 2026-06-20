@@ -5,6 +5,9 @@ export const errorHandler = (error:ErrorRequestHandler, req:Request, res:Respons
 
   if(error.name === 'CastError')
     return res.status(400).json({error: 'malformed id'})
+  
+  if(error.name === 'ValidationError')
+    return res.status(400).json({error: 'validation error'})
 
   next(error)
 }

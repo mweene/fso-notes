@@ -13,11 +13,11 @@ const clientDistPath = path.resolve(__dirname, '..', '..', 'client', 'dist')
 const port = process.env.PORT
 const app = express()
 
-app.use(errorHandler)
 app.use(json())
 app.use(urlencoded({extended: true}))
 app.use(express.static(clientDistPath))
 app.use(router)
+app.use(errorHandler)
 
 //fallback route 
 app.get('{*splat}', (req:Request, res:Response) => {
